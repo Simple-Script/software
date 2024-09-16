@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code to Python Script Converter</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css">
+    <title>Download Python File</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>Code to Python Script Converter</h1>
-        <textarea id="codeInput" placeholder="Enter your code here..."></textarea>
-        <button id="convertButton">Convert to .py</button>
-        <pre><code id="output" class="language-python"></code></pre>
+<body class="bg-gray-100">
+    <div class="max-w-lg mx-auto mt-10 p-5 bg-white rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center">Python Code Downloader</h1>
+        <textarea id="codeInput" class="w-full h-64 p-2 mt-4 border border-gray-300 rounded" placeholder="Write your Python code here..."></textarea>
+        <button id="downloadBtn" class="w-full mt-4 bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600">Pack and Download</button>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeInput').value;
+            const blob = new Blob([code], { type: 'text/python' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'code.py';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
 </body>
 </html>
