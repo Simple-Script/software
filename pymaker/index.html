@@ -8,19 +8,31 @@
 </head>
 <body class="bg-gray-100">
     <div class="max-w-lg mx-auto mt-10 p-5 bg-white rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-center">Python Code Downloader</h1>
+        <h1 class="text-2xl font-bold text-center">Python file Downloader</h1>
         <textarea id="codeInput" class="w-full h-64 p-2 mt-4 border border-gray-300 rounded" placeholder="Write your Python code here..."></textarea>
+        <input type="text" id="fileName" class="w-full mt-4 p-2 border border-gray-300 rounded" placeholder="Enter file name (without extension)">
         <button id="downloadBtn" class="w-full mt-4 bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600">Pack and Download</button>
+        <p id="errorMsg" class="text-red-500 mt-2 hidden">Please enter a valid file name.</p>
     </div>
 
     <script>
         document.getElementById('downloadBtn').addEventListener('click', function() {
             const code = document.getElementById('codeInput').value;
+            const fileName = document.getElementById('fileName').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!fileName) {
+                errorMsg.classList.remove('hidden');
+                return;
+            } else {
+                errorMsg.classList.add('hidden');
+            }
+
             const blob = new Blob([code], { type: 'text/python' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'code.py';
+            a.download = fileName.endsWith('.py') ? fileName : `${fileName}.py`;
             a.click();
             URL.revokeObjectURL(url);
         });
