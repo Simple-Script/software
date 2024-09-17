@@ -3,71 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brainfuck Translator</title>
-    <script>
-        const password = "1234";
-
-        function checkPassword() {
-            const userPassword = document.getElementById("password").value;
-            if (userPassword !== password) {
-                window.location.href = "https://example.com";
-            } else {
-                document.getElementById("translator").style.display = "block";
-            }
-        }
-
-        function brainfuckEncode(input) {
-            // Simple encoding logic for demonstration
-            return input.split('').map(char => {
-                return '+' + char.charCodeAt(0) + '>';
-            }).join('');
-        }
-
-        function brainfuckDecode(code) {
-            // Simple decoding logic for demonstration
-            let output = '';
-            const memory = new Uint8Array(30000);
-            let pointer = 0;
-            for (let i = 0; i < code.length; i++) {
-                switch (code[i]) {
-                    case '>': pointer++; break;
-                    case '<': pointer--; break;
-                    case '+': memory[pointer]++; break;
-                    case '-': memory[pointer]--; break;
-                    case '.': output += String.fromCharCode(memory[pointer]); break;
-                }
-            }
-            return output;
-        }
-
-        function translate() {
-            const input = document.getElementById("inputText").value;
-            const output = brainfuckEncode(input);
-            document.getElementById("output").innerText = "Encoded: " + output;
-        }
-
-        function decode() {
-            const code = document.getElementById("codeText").value;
-            const output = brainfuckDecode(code);
-            document.getElementById("decodedOutput").innerText = "Decoded: " + output;
-        }
-    </script>
+    <title>Brainfuck Decoder</title>
 </head>
 <body>
-    <h1>Brainfuck Translator and Decoder</h1>
-    <input type="password" id="password" placeholder="Enter Password" />
-    <button onclick="checkPassword()">Submit</button>
+    <h1>Brainfuck Decoder</h1>
+    <textarea id="brainfuckCode" rows="10" cols="30" placeholder="Enter Brainfuck code here..."></textarea>
+    <button onclick="decodeBrainfuck()">Decode</button>
+    <pre id="output"></pre>
 
-    <div id="translator" style="display:none;">
-        <h2>Translate Text to Brainfuck</h2>
-        <input type="text" id="inputText" placeholder="Enter text to encode" />
-        <button onclick="translate()">Translate</button>
-        <p id="output"></p>
+    <script>
+        function decodeBrainfuck() {
+            const code = document.getElementById('brainfuckCode').value;
+            const output = document.getElementById('output');
+            const memory = new Uint8Array(30000);
+            let pointer = 0;
+            let result = '';
+            const loopStack = [];
 
-        <h2>Decode Brainfuck Code</h2>
-        <textarea id="codeText" placeholder="Enter Brainfuck code"></textarea>
-        <button onclick="decode()">Decode</button>
-        <p id="decodedOutput"></p>
-    </div>
+            for (let i = 0; i < code.length; i++) {
+                switch (code[i]) {
+                    case '>':
+                        pointer++;
+                        break;
+                    case '<':
+                        pointer--;
+                        break;
+                    case '+':
+                        memory[pointer]++;
+                        break;
+                    case '-':
+                        memory[pointer]--;
+                        break;
+                    case '.':
+                        result += String.fromCharCode(memory[pointer]);
+                        break;
+                    case ',':
+                        // Input handling can be added here
+                        break;
+                    case '[':
+                        if (memory[pointer] === 0) {
+                            let loop = 1;
+                            while (loop > 0) {
+                                i++;
+                                if (code[i] === '[') loop++;
+                                if (code[i] === ']') loop--;
+                            }
+                        } else {
+                            loopStack.push(i);
+                        }
+                        break;
+                    case ']':
+                        if (memory[pointer] !== 0) {
+                            i = loopStack[loopStack.length - 1];
+                        } else {
+                            loopStack.pop();
+                        }
+                        break;
+                }
+            }
+            output.textContent = result;
+        }
+    </script>
 </body>
 </html>
