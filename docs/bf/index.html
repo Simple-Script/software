@@ -4,64 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brainfuck Decoder</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #444;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-    <h1>Brainfuck Decoder</h1>
-    <textarea id="brainfuckCode" rows="10" cols="30" placeholder="Enter Brainfuck code here..."></textarea>
+    <h1>Brainfuck Code Decoder</h1>
+    <textarea id="codeInput" placeholder="Enter Brainfuck code here..."></textarea>
     <button onclick="decodeBrainfuck()">Decode</button>
-    <pre id="output"></pre>
+    <div id="output"></div>
 
     <script>
         function decodeBrainfuck() {
-            const code = document.getElementById('brainfuckCode').value;
+            const code = document.getElementById('codeInput').value;
             const output = document.getElementById('output');
-            const memory = new Uint8Array(30000);
-            let pointer = 0;
-            let result = '';
-            const loopStack = [];
+            output.innerText = brainfuckDecode(code);
+        }
 
+        function brainfuckDecode(code) {
+            const tape = new Uint8Array(30000);
+            let pointer = 0;
+            let output = '';
+            const loopStack = [];
             for (let i = 0; i < code.length; i++) {
                 switch (code[i]) {
-                    case '>':
-                        pointer++;
-                        break;
-                    case '<':
-                        pointer--;
-                        break;
-                    case '+':
-                        memory[pointer]++;
-                        break;
-                    case '-':
-                        memory[pointer]--;
-                        break;
-                    case '.':
-                        result += String.fromCharCode(memory[pointer]);
-                        break;
-                    case ',':
-                        // Input handling can be added here
-                        break;
-                    case '[':
-                        if (memory[pointer] === 0) {
-                            let loop = 1;
-                            while (loop > 0) {
-                                i++;
-                                if (code[i] === '[') loop++;
-                                if (code[i] === ']') loop--;
-                            }
-                        } else {
-                            loopStack.push(i);
-                        }
-                        break;
-                    case ']':
-                        if (memory[pointer] !== 0) {
-                            i = loopStack[loopStack.length - 1];
-                        } else {
-                            loopStack.pop();
-                        }
-                        break;
+                    case '>': pointer++; break;
+                    case '<': pointer--; break;
+                    case '+': tape[pointer]++; break;
+                    case '-': tape[pointer]--; break;
+                    case '.': output += String.fromCharCode(tape[pointer]); break;
+                    case '[': if (tape[pointer] === 0) { let loopEnd = i; while (loopEnd < code.length && (code[loopEnd] !== ']')) loopEnd++; i = loopEnd; } else { loopStack.push(i); } break;
+                    case ']': if (tape[pointer] !== 0) { i = loopStack[loopStack.length - 1]; } else { loopStack.pop(); } break;
                 }
             }
-            output.textContent = result;
+            return output;
         }
     </script>
 </body>
