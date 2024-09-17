@@ -3,66 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brainfuck Decoder</title>
+    <title>Enhanced Brainfuck Decoder</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            color: #444;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        textarea {
-            width: 100%;
-            height: 150px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            white-space: pre-wrap;
-        }
+        body { font-family: Arial, sans-serif; }
+        textarea { width: 100%; height: 200px; }
+        button { margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>Brainfuck Code Decoder</h1>
-    <textarea id="codeInput" placeholder="Enter Brainfuck code here..."></textarea>
+    <h1>Enhanced Brainfuck Code Decoder</h1>
+    <textarea id="brainfuckCode" placeholder="Enter Brainfuck code here..."></textarea>
+    <input type="text" id="inputChar" placeholder="Input for ',' command" />
     <button onclick="decodeBrainfuck()">Decode</button>
-    <div id="output"></div>
+    <h2>Decoded Output:</h2>
+    <pre id="output"></pre>
 
     <script>
         function decodeBrainfuck() {
-            const code = document.getElementById('codeInput').value;
+            const code = document.getElementById('brainfuckCode').value;
+            const input = document.getElementById('inputChar').value.split('');
             const output = document.getElementById('output');
-            output.innerText = brainfuckDecode(code);
+            output.textContent = brainfuckInterpreter(code, input);
         }
 
-        function brainfuckDecode(code) {
+        function brainfuckInterpreter(code, input) {
             const tape = new Uint8Array(30000);
             let pointer = 0;
             let output = '';
+            let inputPointer = 0;
             const loopStack = [];
             for (let i = 0; i < code.length; i++) {
                 switch (code[i]) {
@@ -71,7 +39,15 @@
                     case '+': tape[pointer]++; break;
                     case '-': tape[pointer]--; break;
                     case '.': output += String.fromCharCode(tape[pointer]); break;
-                    case '[': if (tape[pointer] === 0) { let loopEnd = i; while (loopEnd < code.length && (code[loopEnd] !== ']')) loopEnd++; i = loopEnd; } else { loopStack.push(i); } break;
+                    case ',': tape[pointer] = inputPointer < input.length ? input[inputPointer++].charCodeAt(0) : 0; break;
+                    case '[': if (tape[pointer] === 0) { 
+                                  let loopCount = 1; 
+                                  while (loopCount > 0) { 
+                                      i++; 
+                                      if (code[i] === '[') loopCount++; 
+                                      if (code[i] === ']') loopCount--; 
+                                  } 
+                              } else { loopStack.push(i); } break;
                     case ']': if (tape[pointer] !== 0) { i = loopStack[loopStack.length - 1]; } else { loopStack.pop(); } break;
                 }
             }
