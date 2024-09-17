@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainfuck Translator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
+        button { padding: 10px 15px; }
+    </style>
+    <script>
+        const password = "1234";
+
+        function checkPassword() {
+            const userPassword = document.getElementById("password").value;
+            if (userPassword !== password) {
+                alert("Incorrect password! Redirecting...");
+                window.location.href = "https://example.com";
+            } else {
+                document.getElementById("translator").style.display = "block";
+            }
+        }
+
+        function brainfuckEncode(input) {
+            return input.split('').map(char => {
+                return '+' + char.charCodeAt(0) + '>';
+            }).join('');
+        }
+
+        function brainfuckDecode(code) {
+            let output = '';
+            const memory = new Uint8Array(30000);
+            let pointer = 0;
+            for (let i = 0; i < code.length; i++) {
+                switch (code[i]) {
+                    case '>': pointer++; break;
+                    case '<': pointer--; break;
+                    case '+': memory[pointer]++; break;
+                    case '-': memory[pointer]--; break;
+                    case '.': output += String.fromCharCode(memory[pointer]); break;
+                    default: break; // Ignore invalid characters
+                }
+            }
+            return output;
+        }
+
+        function translate() {
+            const input = document.getElementById("inputText").value;
+            const output = brainfuckEncode(input);
+            document.getElementById("output").innerText = "Encoded: " + output;
+        }
+
+        function decode() {
+            const code = document.getElementById("codeText").value;
+            const output = brainfuckDecode(code);
+            document.getElementById("decodedOutput").innerText = "Decoded: " + output;
+        }
+    </script>
+</head>
+<body>
+    <h1>Brainfuck Translator and Decoder</h1>
+    <input type="password" id="password" placeholder="Enter Password" />
+    <button onclick="checkPassword()">Submit</button>
+
+    <div id="translator" style="display:none;">
+        <h2>Translate Text to Brainfuck</h2>
+        <input type="text" id="inputText" placeholder="Enter text to encode" />
+        <button onclick="translate()">Translate</button>
+        <p id="output"></p>
+
+        <h2>Decode Brainfuck Code</h2>
+        <textarea id="codeText" placeholder="Enter Brainfuck code"></textarea>
+        <button onclick="decode()">Decode</button>
+        <p id="decodedOutput"></p>
+    </div>
+</body>
+</html>
