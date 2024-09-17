@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brainfuck Translator</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
-        button { padding: 10px 15px; }
-    </style>
     <script>
         const password = "1234";
 
         function checkPassword() {
             const userPassword = document.getElementById("password").value;
             if (userPassword !== password) {
-                alert("Incorrect password! Redirecting...");
                 window.location.href = "https://example.com";
             } else {
                 document.getElementById("translator").style.display = "block";
@@ -23,12 +17,14 @@
         }
 
         function brainfuckEncode(input) {
+            // Simple encoding logic for demonstration
             return input.split('').map(char => {
                 return '+' + char.charCodeAt(0) + '>';
             }).join('');
         }
 
         function brainfuckDecode(code) {
+            // Simple decoding logic for demonstration
             let output = '';
             const memory = new Uint8Array(30000);
             let pointer = 0;
@@ -39,7 +35,6 @@
                     case '+': memory[pointer]++; break;
                     case '-': memory[pointer]--; break;
                     case '.': output += String.fromCharCode(memory[pointer]); break;
-                    default: break; // Ignore invalid characters
                 }
             }
             return output;
