@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainfuck Compiler</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #ffffff;
+            color: #444;
+            padding: 40px;
+            margin: 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        button {
+            padding: 15px 30px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <h1>Brainfu*k Compiler</h1>
+    <input type="file" id="fileInput" accept=".bf">
+    <textarea id="bfCode" placeholder="Or write your Brainfu*k code here..."></textarea>
+    <button onclick="runCode()">Run</button>
 
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('bfCode').value = e.target.result;
+            };
+            reader.readAsText(file);
+        });
+
+        function runCode() {
+            const code = document.getElementById('bfCode').value;
+            const newTab = window.open();
+            newTab.document.write(code);
+            newTab.document.close();
+        }
+    </script>
+</body>
+</html>
