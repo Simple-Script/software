@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip File Unpacking Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <h1>Upload Your Zip File</h1>
+    <input type="file" id="zipFile" accept=".zip">
+    <button id="unpackButton">Unpack Zip</button>
+    <div id="progress"></div>
+    <div id="fileLinks"></div>
+
+    <script>
+        document.getElementById('unpackButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('zipFile');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    JSZip.loadAsync(e.target.result).then(function(zip) {
+                        const fileLinks = document.getElementById('fileLinks');
+                        const progress = document.getElementById('progress');
+                        fileLinks.innerHTML = '';
+                        progress.innerHTML = 'Unpacking files...';
+                        Object.keys(zip.files).forEach(function(filename) {
+                            zip.files[filename].async('blob').then(function(content) {
+                                const link = document.createElement('a');
+                                link.href = URL.createObjectURL(content);
+                                link.download = filename;
+                                link.textContent = filename;
+                                fileLinks.appendChild(link);
+                                fileLinks.appendChild(document.createElement('br'));
+                            });
+                        });
+                        progress.innerHTML = 'Unpacking complete!';
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert('Please select a zip file.');
+            }
+        });
+    </script>
+</body>
+</html>
