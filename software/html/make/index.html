@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced HTML File Maker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #138496;
+        }
+        pre {
+            background: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+</head>
+<body>
+    <h1>Advanced HTML File Maker</h1>
+    <textarea id="htmlCode" placeholder="Enter your HTML code here..."></textarea>
+    <button onclick="downloadHTML()">Pack and Download</button>
+    <h2>Preview:</h2>
+    <pre><code id="preview" class="language-html"></code></pre>
+
+    <script>
+        function downloadHTML() {
+            const code = document.getElementById('htmlCode').value;
+            const blob = new Blob([code], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'download.html';
+            link.click();
+        }
+
+        document.getElementById('htmlCode').addEventListener('input', function() {
+            const code = this.value;
+            document.getElementById('preview').textContent = code;
+            Prism.highlightElement(document.getElementById('preview'));
+        });
+    </script>
+</body>
+</html>
