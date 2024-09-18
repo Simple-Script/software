@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Encoder</title>
+</head>
+<body>
+    <h1>Text Encoder</h1>
+    <textarea id="inputText" rows="4" cols="50" placeholder="Type your text here..."></textarea><br>
+    <button onclick="packAndDownload()">Pack and Download</button>
+
+    <script>
+        function encodeText(text) {
+            const encodingMap = {
+                'a': 'g',
+                'b': 'h',
+                'c': 'i',
+                'd': 'j',
+                'e': 'k',
+                'f': 'l',
+                'g': 'm',
+                'h': 'n',
+                'i': 'o',
+                'j': 'p',
+                'k': 'q',
+                'l': 'r',
+                'm': 's',
+                'n': 't',
+                'o': 'u',
+                'p': 'v',
+                'q': 'w',
+                'r': 'x',
+                's': 'y',
+                't': 'z',
+                'u': 'a',
+                'v': 'b',
+                'w': 'c',
+                'x': 'd',
+                'y': 'e',
+                'z': 'f',
+                ' ': ' ' // Keep spaces unchanged
+            };
+
+            return text.split('').map(char => encodingMap[char] || char).join('');
+        }
+
+        function packAndDownload() {
+            const inputText = document.getElementById('inputText').value;
+            const encodedText = encodeText(inputText);
+            const blob = new Blob([encodedText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'text.evgenyyonegin';
+            link.click();
+        }
+    </script>
+</body>
+</html>
