@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainfuck Executor with Validation</title>
+    <script>
+        function x(c) {
+            // JavaScript function as provided
+            // (same as in Code Generated #1)
+        }
+
+        function executeBrainfuck() {
+            var code = document.getElementById('brainfuckCode').value;
+            if (!/^[\+\-\<\>\[\]\.\,\#]*$/.test(code)) {
+                alert("Invalid Brainfuck code. Please use only Brainfuck characters.");
+                return;
+            }
+            var newWindow = window.open("", "Brainfuck Output", "width=600,height=400");
+            newWindow.document.write("<pre>" + code + "</pre>");
+            newWindow.document.close();
+            x(code);
+        }
+    </script>
+</head>
+<body>
+    <h1>Brainfuck Code Executor with Validation</h1>
+    <form name="f">
+        <textarea id="brainfuckCode" rows="10" placeholder="Enter Brainfuck code here..."></textarea><br>
+        <input type="button" value="Execute" onclick="executeBrainfuck()">
+    </form>
+    <h2>Output:</h2>
+    <textarea name="o" rows="10" readonly></textarea>
+</body>
+</html>
