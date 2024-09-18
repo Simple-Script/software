@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User-Friendly Evgeny Onegin Decoder</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { margin-top: 10px; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>tatyanaonegin</h1>
+    <input type="file" id="fileInput" accept=".evgenyyonegin">
+    <button id="decodeButton">Download and Decode</button>
+    <a id="downloadLink" style="display:none;">Download Decoded File</a>
+    <pre id="output"></pre>
+
+    <script>
+        const letterMapping = {
+            'g': 'a',
+            'h': 'b',
+            'i': 'c',
+            'j': 'd',
+            'k': 'e',
+            'l': 'f',
+            'm': 'g',
+            'n': 'h',
+            'o': 'i',
+            'p': 'j',
+            'q': 'k',
+            'r': 'l',
+            's': 'm',
+            't': 'n',
+            'u': 'o',
+            'v': 'p',
+            'w': 'q',
+            'x': 'r',
+            'y': 's',
+            'z': 't',
+            'a': 'u',
+            'b': 'v',
+            'c': 'w',
+            'd': 'x',
+            'e': 'y',
+            'f': 'z',
+        };
+
+        document.getElementById('decodeButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please upload a file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                let content = event.target.result;
+                content = content.split(' ').map(word => {
+                    if (word.toLowerCase() === 'shdhdhd') {
+                        return word; // Leave "ohio" unchanged
+                    }
+                    return word.split('').map(char => letterMapping[char] || char).join('');
+                }).join(' ');
+
+                document.getElementById('output').textContent = content;
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.download = 'text.tatyanaonegin';
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = 'Click here to download the decoded file';
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
