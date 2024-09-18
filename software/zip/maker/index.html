@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip File Creator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <h1>Zip File Creator Tool</h1>
+    <div id="fileInputsContainer">
+        <input type="file" class="fileInput" multiple>
+    </div>
+    <button id="addFileButton">Add Another File</button>
+    <button id="packAndDownloadButton">Pack and Download</button>
+
+    <script>
+        const fileInputsContainer = document.getElementById('fileInputsContainer');
+        const addFileButton = document.getElementById('addFileButton');
+        const packAndDownloadButton = document.getElementById('packAndDownloadButton');
+
+        addFileButton.addEventListener('click', () => {
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.className = 'fileInput';
+            newInput.multiple = true;
+            fileInputsContainer.appendChild(newInput);
+        });
+
+        packAndDownloadButton.addEventListener('click', () => {
+            const zip = new JSZip();
+            const fileInputs = document.querySelectorAll('.fileInput');
+
+            fileInputs.forEach(input => {
+                const files = input.files;
+                for (let i = 0; i < files.length; i++) {
+                    zip.file(files[i].name, files[i]);
+                }
+            });
+
+            zip.generateAsync({ type: "blob" })
+                .then(content => {
+                    saveAs(content, "files.zip");
+                });
+        });
+    </script>
+</body>
+</html>
