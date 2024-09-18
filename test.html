@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Enhanced Brainfuck Interpreter</title>
+    <title>Brainfuck Interpreter with Display</title>
     <style>
         body, td, caption {
-            background: #f0f0f0;
-            color: #333;
+            background: #e0e0e0;
+            color: #222;
             font-family: monospace;
             font-size: 14px;
         }
         a:link, a:visited {
-            color: #0066cc;
+            color: #005500;
         }
         a:hover, a:active {
-            color: #ff6600;
+            color: #ff0000;
         }
         .t {
             border-bottom: 1px dashed;
@@ -71,15 +71,15 @@
         function runCode() {
             var code = document.getElementById('brainfuckCode').value;
             var result = interpretBrainfuck(code);
-            var newWindow = window.open();
-            newWindow.document.write(result);
-            newWindow.document.close();
+            document.getElementById('output').innerText = result;
         }
     </script>
 </head>
 <body>
-    <h1>Enhanced Brainfuck Interpreter</h1>
+    <h1>Brainfuck Interpreter with Display</h1>
     <textarea id="brainfuckCode" rows="10" cols="50"></textarea><br>
     <button onclick="runCode()">Run Code</button>
+    <h2>Output:</h2>
+    <pre id="output"></pre>
 </body>
 </html>
