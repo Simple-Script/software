@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Brainfuck Interpreter</title>
+    <style>
+        body, td, caption {
+            background: #f0f0f0;
+            color: #333;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        a:link, a:visited {
+            color: #0066cc;
+        }
+        a:hover, a:active {
+            color: #ff6600;
+        }
+        .t {
+            border-bottom: 1px dashed;
+        }
+    </style>
+    <script>
+        function interpretBrainfuck(code) {
+            var memory = new Array(30000).fill(0);
+            var pointer = 0;
+            var output = '';
+            var loopStack = [];
+            var inputIndex = 0;
+
+            for (var i = 0; i < code.length; i++) {
+                switch (code[i]) {
+                    case '>':
+                        pointer++;
+                        break;
+                    case '<':
+                        pointer--;
+                        break;
+                    case '+':
+                        memory[pointer]++;
+                        break;
+                    case '-':
+                        memory[pointer]--;
+                        break;
+                    case '.':
+                        output += String.fromCharCode(memory[pointer]);
+                        break;
+                    case ',':
+                        memory[pointer] = prompt("Input a character:").charCodeAt(0);
+                        break;
+                    case '[':
+                        if (memory[pointer] === 0) {
+                            var loopEnd = code.indexOf(']', i);
+                            if (loopEnd === -1) throw new Error("Unmatched brackets");
+                            i = loopEnd;
+                        } else {
+                            loopStack.push(i);
+                        }
+                        break;
+                    case ']':
+                        if (memory[pointer] !== 0) {
+                            i = loopStack[loopStack.length - 1];
+                        } else {
+                            loopStack.pop();
+                        }
+                        break;
+                }
+            }
+            return output;
+        }
+
+        function runCode() {
+            var code = document.getElementById('brainfuckCode').value;
+            var result = interpretBrainfuck(code);
+            var newWindow = window.open();
+            newWindow.document.write(result);
+            newWindow.document.close();
+        }
+    </script>
+</head>
+<body>
+    <h1>Enhanced Brainfuck Interpreter</h1>
+    <textarea id="brainfuckCode" rows="10" cols="50"></textarea><br>
+    <button onclick="runCode()">Run Code</button>
+</body>
+</html>
