@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swerve Car Game with Turns</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { background: #e0e0e0; display: block; margin: auto; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let car = { x: 200, y: 500, width: 30, height: 50, speed: 2, angle: 0 };
+        let score = 0;
+        let turns = [100, 300, 500, 700]; // Example turn positions
+
+        function drawCar() {
+            ctx.save();
+            ctx.translate(car.x, car.y);
+            ctx.rotate(car.angle);
+            ctx.fillStyle = 'red';
+            ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+            ctx.restore();
+        }
+
+        function drawRoad() {
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            turns.forEach(turn => {
+                ctx.fillRect(0, turn, canvas.width, 10);
+            });
+        }
+
+        function update() {
+            car.speed += 0.01; // Gradual speed increase
+            car.y -= car.speed; // Move car forward
+            score += Math.floor(car.speed); // Update score based on speed
+            if (car.y < 0) { car.y = canvas.height; } // Reset car position
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRoad();
+            drawCar();
+            requestAnimationFrame(update);
+        }
+
+        canvas.addEventListener('click', (event) => {
+            if (event.clientX < canvas.width / 2) {
+                car.angle -= Math.PI / 2; // Turn left
+            } else {
+                car.angle += Math.PI / 2; // Turn right
+            }
+        });
+
+        update();
+    </script>
+</body>
+</html>
