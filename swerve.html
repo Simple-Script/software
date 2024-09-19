@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swerve Car Game with Turns</title>
+    <title>Complete Swerve Car Game</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { background: #e0e0e0; display: block; margin: auto; }
+        #score { position: absolute; top: 10px; left: 10px; font-size: 24px; }
     </style>
 </head>
 <body>
+    <div id="score">Score: 0</div>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
         let car = { x: 200, y: 500, width: 30, height: 50, speed: 2, angle: 0 };
         let score = 0;
         let turns = [100, 300, 500, 700]; // Example turn positions
@@ -22,7 +25,7 @@
             ctx.save();
             ctx.translate(car.x, car.y);
             ctx.rotate(car.angle);
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'green';
             ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
             ctx.restore();
         }
@@ -40,6 +43,7 @@
             car.speed += 0.01; // Gradual speed increase
             car.y -= car.speed; // Move car forward
             score += Math.floor(car.speed); // Update score based on speed
+            scoreDisplay.innerText = `Score: ${score}`; // Update score display
             if (car.y < 0) { car.y = canvas.height; } // Reset car position
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawRoad();
